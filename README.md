@@ -1,61 +1,73 @@
-# Cool Code Frontend Task
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-## Introduction
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-Briefly introduce your project, explaining its core functionality and objectives. Describe why it exists and the problems it aims to address.
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Features
+## Description
 
-List and briefly describe the key features of your project:
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-- **User Authentication:** Users can sign up and log in to access the system.
-- **User Roles:** The project supports three roles - Buyer, Vendor, and Admin.
-- **Product Management:** Vendors can add, edit, and delete products, while Buyers can view them.
-- **Category Management:** Admins can manage product categories.
-- **Pagination:** Product listings are paginated for improved performance.
-
-## Technologies
-
-Outline the technologies, libraries, and tools used in your project:
-
-- React
-- React Query
-- Other relevant libraries (e.g., Axios for API requests)
-- Mention any backend technologies if applicable (e.g., Node.js, Express, Prisma, PostgreSQL)
-
-## Getting Started
-
-Explain how to set up and run your project locally. Provide step-by-step instructions for installation, environment setup, and starting the development server.
+## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/MahmoudAbdelkawi/Cool Code-Frontend-Task.git
+$ npm install
+```
 
-# Navigate to the project directory
-cd your-project
+## Running the app
 
-# Install dependencies
-npm install
+```bash
+# development
+$ npm run start
 
-# Set up environment variables
-# Create a .env file and add necessary configuration (API endpoints, secret keys, etc.)
+# watch mode
+$ npm run start:dev
 
-# Start the development server
-npm start
+# production mode
+$ npm run start:prod
+```
 
-# Authentication
+## Test
 
-## Overview
-Authentication in this project is handled using JSON Web Tokens (JWT). It allows users to securely access the system. Below, you'll find details about user registration and login processes, along with information about securing user data.
+```bash
+# unit tests
+$ npm run test
 
-## User Registration
-To create an account, users can make a POST request to the following endpoint:
-- `POST /api/auth/signup`
+# e2e tests
+$ npm run test:e2e
 
-## User Login
-Authenticated users can log in using the following endpoint:
-- `POST /api/auth/login`
+# test coverage
+$ npm run test:cov
+```
 
-## Securing User Data
-We prioritize the security of user data. We implement best practices to protect sensitive information and user privacy.
+## Support
 
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](LICENSE).
