@@ -1,4 +1,4 @@
-# SkyLink Frontend Task
+# Cool Code Frontend Task
 
 ## Introduction
 
@@ -29,7 +29,7 @@ Explain how to set up and run your project locally. Provide step-by-step instruc
 
 ```bash
 # Clone the repository
-git clone https://github.com/MahmoudAbdelkawi/SkyLink-Frontend-Task.git
+git clone https://github.com/MahmoudAbdelkawi/Cool Code-Frontend-Task.git
 
 # Navigate to the project directory
 cd your-project
