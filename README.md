@@ -1,4 +1,4 @@
-# Cool Code Frontend Task
+# Cool Code Task
 
 ## Introduction
 
