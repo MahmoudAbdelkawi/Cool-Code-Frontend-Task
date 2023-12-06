@@ -1,4 +1,4 @@
-# SkyLink Frontend Task
+# Cool Code Frontend Task
 
 ## Introduction
 
