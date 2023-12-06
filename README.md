@@ -59,31 +59,3 @@ Authenticated users can log in using the following endpoint:
 ## Securing User Data
 We prioritize the security of user data. We implement best practices to protect sensitive information and user privacy.
 
-# User Roles
-
-## Overview
-This project supports three user roles, each with specific permissions and capabilities:
-
-- **Buyer:** Can view products and categories.
-- **Vendor:** Can add, edit, and delete products, as well as access all products and categories.
-- **Admin:** Has the ability to manage categories and access all products.
-
-# Database Schema
-
-## Overview
-The database schema is designed to efficiently store and manage data for the application. Below, you'll find an overview of the database structure, including tables and their relationships if applicable.
-
-# Pagination
-
-## Overview
-Pagination is implemented to improve the performance and usability of product listings. Below, you'll find details about how pagination is handled:
-
-# Contributing
-
-## Overview
-We welcome contributions from the community. If you'd like to contribute to this project, please follow our guidelines for submitting bug reports, feature requests, or pull requests. We also adhere to specific coding standards and development workflows.
-
-# License
-
-## Overview
-This project is distributed , which you can find in the LICENSE file. Please review the full license details for more information.
