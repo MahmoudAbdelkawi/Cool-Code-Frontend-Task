@@ -57,9 +57,9 @@ function Slidebar() {
           <NavLink to={"/"} onClick={() => setVisible(false)}>
             <Menubar model={[{ label: "Product" }]} />
           </NavLink>
-          <NavLink to={"/category"} onClick={() => setVisible(false)}>
+          {/* <NavLink to={"/category"} onClick={() => setVisible(false)}>
             <Menubar className="mt-5" model={[{ label: "Category" }]} />
-          </NavLink>
+          </NavLink> */}
           <NavLink to={"/profile"} onClick={() => setVisible(false)}>
             <Menubar className="mt-5" model={[{ label: "Profile" }]} />
           </NavLink>

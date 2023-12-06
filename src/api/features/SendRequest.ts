@@ -23,15 +23,12 @@ export async function registerRequest<T>(data: LoginRequestType<T>) {
   }
 }
 
-export async function getProducts(
-  productName: string,
-  page: number,
-  limit: number
+export async function getTasks(
+  searchValue: string,
 ) {
   try {
-    console.log(productName, page, limit);
     const response = await axios.get(
-      `/products/searchOnProduct?title=${productName}&page=${page}&limit=${limit}`
+      `/task/${searchValue}`
     );
     return response.data;
   } catch (error: any) {
@@ -48,18 +45,26 @@ export async function getAllCategories() {
   }
 }
 
-export async function deleteProduct(id: number) {
+export async function deleteTask(id: string) {
   try {
-    const response = await axios.delete(`/products/deleteProduct/${id}`);
+    const response = await axios.delete(`/task/${id}`);
 
     return response.data;
   } catch (error: any) {
     toast.error(error?.response?.data?.message || "An error occurred");
   }
 }
-export async function editProduct(obj : {id: number , title : string}) {
+export async function editProduct(obj : any) {
   try {
-    const response = await axios.patch(`/products/updateProduct/${obj.id}`, {title : obj.title});
+    let newObject = {
+      title: obj.title,
+      description: obj.description,
+      category: obj.category.name,
+      dueDate: obj.dueDate,
+      // id: obj.id,
+    };
+    console.log(newObject);
+    const response = await axios.put(`/task/update/${obj.id}`, newObject );
     return response.data;
   } catch (error: any) {
     toast.error(error?.response?.data?.message || "An error occurred");
@@ -68,7 +73,9 @@ export async function editProduct(obj : {id: number , title : string}) {
 
 export async function getMe() {
   try {
-    const response = await axios.get(`/auth/getMe`);
+    const response = await axios.get(`/auth/me`);
+    console.log(response.data);
+    
     return response.data;
   } catch (error: any) {
     toast.error(error?.response?.data?.message || "An error occurred");

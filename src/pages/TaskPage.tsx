@@ -1,30 +1,29 @@
 import { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { useQuery } from "react-query";
-import { getProducts } from "../api/features/SendRequest";
+import { getTasks } from "../api/features/SendRequest";
 import Loading from "./Loading";
 import { ProductType } from "../types";
 
-function ProductPage() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+function TaskPage() {
   const [products, setProduct] = useState<ProductType[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [value, setValue] = useState<string>();
-  const [page, setPage] = useState<number>(1);
-  const [limit] = useState<number>(10);
 
   const { isLoading } = useQuery(
-    ["product", searchValue, page, limit],
-    () => getProducts(searchValue, page, limit),
+    ["task", searchValue],
+    () => getTasks(searchValue),
     {
       cacheTime: 5000, // 5000 >> 5 seconds (cache is the time that the data will store at the cache and not fetch again)
       staleTime: 5000, // this is the time after it the data will be fetch again
       onSuccess: (data) => {
         console.log("success", data);
-        setProduct(data?.data?.products);
+        if (!data?.length) {
+          data = [data]
+        }
+        setProduct(data);
       },
     }
   );
@@ -32,9 +31,7 @@ function ProductPage() {
   if (isLoading) {
     return <Loading />;
   }
-  const loadMore = () => {
-    setPage(page + 1);
-  };
+
   const dataFetching = () => {
     setSearchValue(value!);
   };
@@ -56,21 +53,18 @@ function ProductPage() {
           scrollHeight="400px"
           className="container m-auto"
         >
+          <Column field="_id" header="Id"></Column>
           <Column field="title" header="Title"></Column>
-          <Column field="category.name" header="Category"></Column>
-          <Column field="author.name" header="Author"></Column>
-          <Column field="createdAt" header="CreatedAt"></Column>
+          <Column field="category" header="Category"></Column>
+          {/* <Column field="userId" header="Author"></Column> */}
+          <Column field="dueDate" header="Due Date"></Column>
+          <Column field="completed" header="Is completed"></Column>
+          
         </DataTable>
       </div>
-      <div className="container m-auto">
-        <Button
-          className="text-center border border-white rounded-lg w-full mt-7"
-          label="Load More"
-          onClick={loadMore}
-        />
-      </div>
+      
     </div>
   );
 }
 
-export default ProductPage;
+export default TaskPage;

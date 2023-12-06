@@ -7,9 +7,7 @@ export interface PrivateProps {
   }
 
 export interface SignupType extends LoginType {
-    name : string;
-    confirmationPassword : string;
-    role : "ADMIN" | "BUYER" | "VENDOR";
+    
 }
 
 

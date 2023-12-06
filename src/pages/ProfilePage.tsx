@@ -1,26 +1,26 @@
 import { useMutation, useQuery } from "react-query";
-import Loading from "./Loading";
 import {
-  deleteProduct,
+  deleteTask,
   editProduct,
-  getAllCategories,
   getMe,
   registerRequest,
 } from "../api/features/SendRequest";
 import "./profilePage.css";
 import { useState } from "react";
-import { CategoryType, ProductType, UserType } from "../types";
+import { CategoryType, UserType } from "../types";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 function ProfilePage() {
   const [user, setUser] = useState<UserType>();
-  const [category, setCategory] = useState<CategoryType[]>([]);
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const [editProductState , setEditProductState] = useState<{id:number , title : string}>()
+  const [category, setCategory] = useState<CategoryType[]>([{id:0 , name:"personal"}, {id:1 , name:"work"} , {id:0 , name:"shopping"}]);
+  const [tasks, setTasks] = useState<any>([]);
+  const [editTaskState , setEditTaskState] = useState<any>()
   const [value, setValue] = useState({
     title: "",
+    description: "",
+    dueDate: "",
     category: { id: "", name: "" },
   });
   const [visible, setVisible] = useState(false);
@@ -28,44 +28,51 @@ function ProfilePage() {
     cacheTime: 5000, // 5000 >> 5 seconds (cache is the time that the data will store at the cache and not fetch again)
     staleTime: 5000, // this is the time after it the data will be fetch again
     onSuccess: (data) => {
-      setUser(data?.user);
-      setProducts(data?.user.products);
+      setUser(data.user);
+      setTasks(data.tasks);
     },
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [position, setPosition] = useState<Position>("center");
-  const { isLoading: categoryLoading } = useQuery(
-    ["Category"],
-    getAllCategories,
-    {
-      cacheTime: 5000,
-      staleTime: 5000,
-      onSuccess: (data) => {
-        setCategory(data?.data?.categories);
-      },
-    }
-  );
+  // const { isLoading: categoryLoading } = useQuery(
+  //   ["Category"],
+  //   getAllCategories,
+  //   {
+  //     cacheTime: 5000,
+  //     staleTime: 5000,
+  //     onSuccess: (data) => {
+  //       setCategory(data?.data?.categories);
+  //     },
+  //   }
+  // );
   const { mutate } = useMutation(
-    registerRequest<{ title: string; categoryId: string }>,
+    registerRequest<any>,
     {
       onSuccess: (data) => {
-        console.log(data.data.product);
-        setProducts([...products, data.data.product]);
+        // console.log(data.data.product);
+        setTasks([...tasks, data]);
       },
     }
   );
-  const { mutate: deleteProductMutation } = useMutation(deleteProduct, {
+  const { mutate: deleteProductMutation } = useMutation(deleteTask, {
     onSuccess: () => {
+      let newTasks = tasks.filter((task: any) => task.id !== tasks.id);
+      setTasks(newTasks);
       refetch();
     },
   });
   const { mutate: editProductMutation } = useMutation(editProduct, {
     onSuccess: () => {
+      // edit the task
+      let newTasks = tasks.map(tasks => tasks.id === editTaskState.id ? editTaskState : tasks)
+      setTasks(newTasks);
+      // clean the state
+      setEditTaskState(null)
       refetch();
     },
   });
   const editMethod = () => {
-    editProductMutation(editProductState)
+    editProductMutation(editTaskState)
     setModalVisible(false)
   }
   const footerContent = (
@@ -87,29 +94,33 @@ function ProfilePage() {
   );
     
 
-  const handleAddProduct = async () => {
+  const handleAddTask = async () => {
     const data = {
       data: {
         title: value.title,
-        categoryId: value.category.id,
+        category: value.category.name,
+        description: value.description,
+        dueDate: value.dueDate,
       },
-      url: "/products/addProduct",
+      url: "/task",
     };
     await mutate(data);
 
     setVisible(false);
   };
-  const show = (id:number) => {
+  const show = (id:string) => {
     // setNewTitle(newTitle)
     // editProductMutation({id, title : newTitle })
-    setEditProductState({id , title : ""})
+    
+    setEditTaskState({...editTaskState,id})
+    
     setPosition(position);
     setModalVisible(true);
   };
 
-  if (isLoading || categoryLoading) {
-    return <Loading />;
-  }
+  // if (isLoading || categoryLoading) {
+  //   return <Loading />;
+  // }
   return (
     <div className="dark:text-white">
       <div className="main">
@@ -119,11 +130,11 @@ function ProfilePage() {
             <i className="fa fa-pen fa-xs edit"></i>
             <table>
               <tbody>
-                <tr>
-                  <td>Name</td>
-                  <td>:</td>
-                  <td>{user?.name}</td>
-                </tr>
+                  {/* <tr>
+                    <td>Name</td>
+                    <td>:</td>
+                    <td>{user?.name}</td>
+                  </tr> */}
                 <tr>
                   <td>Email</td>
                   <td>:</td>
@@ -157,7 +168,21 @@ function ProfilePage() {
                 setValue((prev) => ({ ...prev, title: e.target.value }))
               }
             />
-            {!categoryLoading && (
+             <InputText
+              value={value.description}
+              placeholder="description"
+              onChange={(e) =>
+                setValue((prev) => ({ ...prev, description: e.target.value }))
+              }
+            />
+             <InputText
+              value={value.dueDate}
+              placeholder="dueDate"
+              onChange={(e) =>
+                setValue((prev) => ({ ...prev, dueDate: e.target.value }))
+              }
+            />
+            
               <Dropdown
                 value={value.category}
                 onChange={(e) =>
@@ -168,15 +193,15 @@ function ProfilePage() {
                 placeholder="Select a Category"
                 className="w-full md:w-14rem"
               />
-            )}
-            <Button onClick={handleAddProduct}>Add Product</Button>
+            
+            <Button onClick={handleAddTask}>Add Product</Button>
           </div>
         </Dialog>
-        {user?.role === "VENDOR" ? (
+        {user?.role === "user" ? (
           <>
             <div className="flex justify-between items-center py-4">
-              <h2>My Products</h2>
-              <Button onClick={() => setVisible(true)}>Add Product</Button>
+              <h2>My Tasks</h2>
+              <Button onClick={() => setVisible(true)}>Task Product</Button>
             </div>
             <div className="card">
               <div className="card-body">
@@ -184,22 +209,22 @@ function ProfilePage() {
                 <div className="social-media">
                   <table>
                     <tbody>
-                      {products.map((product) => (
-                        <tr key={product.id}>
+                      {tasks.map((task) => (
+                        <tr key={task._id}>
                           <td>Name</td>
                           <td>:</td>
-                          <td>{product?.title}</td>
+                          <td>{task?.title}</td>
                           <td>
                             <Button
                               label="Edit"
                               icon="pi pi-check"
                               className=" p-button-text cursor-pointer"
-                              onClick={()=>show(product.id)}/* editProductMutation({id: product.id, title : newTitle }) */
+                              onClick={()=>show(task._id)}/* editProductMutation({id: product.id, title : newTitle }) */
                             />
                           </td>
                           <td>
                             <Button
-                              onClick={() => deleteProductMutation(product.id)}
+                              onClick={() => deleteProductMutation(task._id)}
                               label="Delete"
                               icon="pi pi-times"
                               className="p-button-text p-button-text"
@@ -213,7 +238,7 @@ function ProfilePage() {
               </div>
             </div>
             <Dialog
-              header="Edit Product"
+              header="Edit Task"
               visible={modalVisible}
               position={position}
               style={{ width: "50vw" }}
@@ -226,17 +251,54 @@ function ProfilePage() {
               htmlFor="email"
               className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Edit Product
+              Edit Task
             </label>
               <input
                 type="text"
+                name="title"
+                id="title"
+                className="bg-gray-50 mb-1 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600  block w-full p-2.5 "
+                placeholder="Task title"
+                onChange={(e) => setEditTaskState({...editTaskState , title : e.target.value})}
+                value={editTaskState?.title}
+              />
+              <input
+                type="text"
+                name="description"
+                id="description"
+                className="bg-gray-50 border mb-1 border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600  block w-full p-2.5 "
+                placeholder="Task description"
+                onChange={(e) => setEditTaskState({...editTaskState , description : e.target.value})}
+                value={editTaskState?.description}
+              />
+              <input
+                type="text"
+                name="dueDate"
+                id="dueDate"
+                className="bg-gray-50 border mb-1 border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600  block w-full p-2.5 "
+                placeholder="Task dueDate"
+                onChange={(e) => setEditTaskState({...editTaskState , dueDate : e.target.value})}
+                value={editTaskState?.dueDate}
+              />
+               <Dropdown
+                value={editTaskState?.category}
+                onChange={(e) =>
+                  setEditTaskState({ ...editTaskState, category: e.value })
+                }
+                options={category}
+                optionLabel="name"
+                placeholder="Select a Category"
+                className="w-full md:w-14rem "
+              />
+              {/* <input
+                type="text"
                 name="name"
                 id="name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="product name"
-                onChange={(e) => setEditProductState({...editProductState , title : e.target.value})}
-                value={editProductState?.title}
-              />
+                className="bg-gray-50 border mb-1 border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Task name"
+                onChange={(e) => setEditTaskState({...editTaskState , title : e.target.value})}
+                value={editTaskState?.title}
+              /> */}
             </Dialog>
           </>
           

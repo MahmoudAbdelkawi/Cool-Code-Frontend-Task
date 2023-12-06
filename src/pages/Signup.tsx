@@ -5,16 +5,11 @@ import { z } from "zod";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { registerRequest } from "../api/features/SendRequest";
-import { Dropdown } from "primereact/dropdown";
 
 
 function Signup() {
   const [signup, setSignup] = useState<SignupType>({} as SignupType);
-    const roles = [
-        { name: '' },
-        { name: 'BUYER' },
-        { name: 'VENDOR' }
-    ];
+    
   const navigate = useNavigate();
   const { mutate } = useMutation(registerRequest<SignupType> , {
     onSuccess : (data) => {
@@ -24,9 +19,7 @@ function Signup() {
   });
   const schema = z.object({
     email: z.string().email('Invalid email format'),
-    name: z.string().nonempty('Name is required'),
     password: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmationPassword: z.string().min(8, 'Password must be at least 8 characters').refine((data) => data === signup.password, { message : "Password and confirmation password must be same"}),
     // role : z.string().nonempty('Role is required')
   });
   
@@ -40,7 +33,7 @@ function Signup() {
         schema.parse(signup);    
         const data = {
           data:signup,
-          url : "/users/signup"
+          url : "/auth/signup"
         }
         await mutate(data);
       }
@@ -51,17 +44,6 @@ function Signup() {
         }
         if (error.formErrors.fieldErrors.password?.length) {
           toast.error("Password : " + error.formErrors.fieldErrors.password[0]);
-        }
-        if (error.formErrors.fieldErrors.name?.length) {
-          toast.error("name : " + error.formErrors.fieldErrors.name[0]);
-        }
-        if (error.formErrors.fieldErrors.confirmationPassword?.length) {
-          console.log(error.formErrors.fieldErrors.confirmationPassword[0]);
-          
-          toast.error("confirmationPassword : " + error.formErrors.fieldErrors.confirmationPassword[0]);
-        }
-        if (error.formErrors.fieldErrors.role?.length) {
-          toast.error("role : " + error.formErrors.fieldErrors.role[0]);
         }
       }
       else
@@ -116,15 +98,7 @@ function Signup() {
                 >
                   Your name
                 </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="yourname"
-                  onChange={handleInputChange}
-                  value={signup.name}
-                />
+                
               </div>
               <div>
                 <label
@@ -143,33 +117,8 @@ function Signup() {
                   value={signup.password}
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="confirmationPassword"
-                  className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Confirmation Password
-                </label>
-                <input
-                  type="password"
-                  name="confirmationPassword"
-                  id="confirmationPassword"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  onChange={handleInputChange}
-                  value={signup.confirmationPassword}
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="role"
-                  className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Role
-                </label>
-                <Dropdown value={{name:signup.role}} onChange={(e)=>setSignup({...signup, role:e.target.value.name})} options={roles} optionLabel="name" 
-                        placeholder="Select a Role" className="w-full md:w-14rem" />
-              </div>
+              
+             
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">

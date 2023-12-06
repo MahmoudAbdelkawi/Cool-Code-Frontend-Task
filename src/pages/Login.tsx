@@ -32,7 +32,7 @@ function Login() {
         schema.parse(login);  
         const data = {
           data:login,
-          url : "/users/login"
+          url : "/auth/signin"
         }
         await mutate(data);
       }
